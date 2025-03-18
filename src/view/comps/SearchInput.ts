@@ -7,7 +7,8 @@ export default class SearchInput {
 
     constructor() {
         this.field = el('input.search-custom-input__field', { type: 'text', id: 'search', name: 'search', placeholder: 'Что будем искать?' });
-        this.svg = svg('svg.search-cuctom-input__icon', {
+        this.svg = svg('svg.search-custom-input__icon', {
+            'aria-hidden': true,
             width: '24',
             height: '24',
             viewBox: '0 0 24 24',
@@ -16,14 +17,14 @@ export default class SearchInput {
         }, [
             svg('path', {
                 d: 'M11.5 20C16.1944 20 20 16.1944 20 11.5C20 6.80558 16.1944 3 11.5 3C6.80558 3 3 6.80558 3 11.5C3 16.1944 6.80558 20 11.5 20Z',
-                stroke: '#AAAAAA',
+                stroke: 'currentColor',
                 'stroke-width': '2',
                 'stroke-linecap': 'round',
                 'stroke-linejoin': 'round',
             }),
             svg('path', {
                 d: 'M20.9999 21L17.5 17.5001',
-                stroke: '#AAAAAA',
+                stroke: 'currentColor',
                 'stroke-width': '2',
                 'stroke-linecap': 'round',
                 'stroke-linejoin': 'round',

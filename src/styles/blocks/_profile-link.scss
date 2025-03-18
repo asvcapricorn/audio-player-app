@@ -1,0 +1,50 @@
+@use '../global/variables';
+
+.profile-link {
+    $root: &;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px 6px 15px;
+    background-color: variables.$color-white-smoke;
+    border-radius: 30px;
+    width: 246px;
+    outline: none;
+    transition: background-color variables.$transition-300-ease-in;
+
+    &:hover,
+    &:focus-visible {
+        background-color: variables.$color-whisper;
+    }
+
+    &:hover &__icon,
+    &:focus-visible &__icon {
+        color: variables.$color-nero;
+    }
+
+    &__wrapper {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    &__img {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+    }
+
+    &__name {
+        font-size: 14px;
+        line-height: 12px;
+        letter-spacing: 0.14px;
+    }
+
+    &__icon {
+        color: variables.$color-burnt-orange;
+        transition: color variables.$transition-300-ease-in;
+        width: 16px;
+        height: 16px;
+    }
+}

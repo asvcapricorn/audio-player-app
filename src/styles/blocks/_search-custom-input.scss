@@ -1,0 +1,42 @@
+@use "../global/variables";
+
+.search-custom-input {
+    $root: &;
+    position: relative;
+    width: 798px;
+
+    &__field {
+        width: 100%;
+        border: none;
+        border-radius: 30px;
+        font-size: 12px;
+        line-height: 12px;
+        letter-spacing: 1.08px;
+        text-transform: uppercase;
+        color: variables.$color-dark-gray;
+        background-color: variables.$color-white-smoke;
+        padding: 20px 20px 20px 44px;
+        outline: none;
+        transition: background-color variables.$transition-300-ease-in;
+
+        &:hover,
+        &:focus-visible {
+            background-color: variables.$color-whisper;
+        }
+
+        &:hover+#{$root}__icon,
+        &:focus-visible+#{$root}__icon {
+            color: variables.$color-burnt-orange;
+        }
+    }
+
+    &__icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: variables.$color-dark-gray-2;
+        transition: color variables.$transition-300-ease-in;
+    }
+}

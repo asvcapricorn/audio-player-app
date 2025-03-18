@@ -6,14 +6,18 @@ import ProfileLink from './ProfileLink';
 export default class Header {
     private header: HTMLElement;
     private container: Container;
+    private inner: HTMLElement;
+    private wrapper: HTMLElement;
+    private linkWrapper: HTMLElement;
+    private link: HTMLAnchorElement;
     private logo: SVGElement;
     private search: Search;
     private profile: ProfileLink;
 
     constructor() {
-        this.logo = svg('svg.profile-link__icon', {
-            width: '185',
-            height: '31',
+        this.logo = svg('svg.header__link-icon', {
+            width: '184',
+            height: '30',
             viewBox: '0 0 185 31',
             fill: 'none',
             xmlns: 'http://www.w3.org/2000/svg',
@@ -27,10 +31,14 @@ export default class Header {
                 'fill': 'black'
             })
         ]);
+        this.link = el('a.header__link', [this.logo], { href: '#' }) as HTMLAnchorElement;
+        this.linkWrapper = el('.header__link-wrapper', this.link);
         this.search = new Search();
         this.profile = new ProfileLink('/src/images/profile.jpg', 'username');
-        this.container = new Container(this.logo, this.search.render(), this.profile.render());
-        this.header = el('header', this.container.render());
+        this.wrapper = el('.header__wrapper', this.search.render(), this.profile.render());
+        this.inner = el('.header__inner', this.linkWrapper, this.wrapper);
+        this.container = new Container(this.inner);
+        this.header = el('header.header', this.container.render());
     }
 
     render(): HTMLElement {

@@ -1,17 +1,19 @@
+import './src/styles/style.scss';
 import { el, mount } from 'redom';
 import routes from './src/controller/Routes';
 
-const appEl = document.querySelector('.app');
+// const appEl = document.querySelector('.app');
+const bodyEl = document.querySelector('body');
 
 const renderPage = (route: string) => {
-    if (appEl) {
-        appEl.innerHTML = '';
+    if (bodyEl) {
+        bodyEl.innerHTML = '';
         const page = routes[route];
         if (page) {
-            mount(appEl, page.render());
+            mount(bodyEl, page.render());
             return;
         }
-        mount(appEl, el('h1', '404 - Page Not Found'));
+        mount(bodyEl, el('h1', '404 - Page Not Found'));
     }
 };
 
