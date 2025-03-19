@@ -1,13 +1,16 @@
 .header {
-    padding: 15px 0 0;
-
-    &__inner {
-        display: flex;
-        gap: 47px;
-    }
+    padding: 15px 30px 0;
+    display: grid;
+    grid-template-columns: 259px 1fr;
+    gap: 45px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
 
     &__wrapper {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 246px;
         gap: 30px;
     }
 
@@ -15,7 +18,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0 53px 15px 20px;
+        padding: 0 34px 15px 0;
     }
 
     &__link {

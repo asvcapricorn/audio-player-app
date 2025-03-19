@@ -1,16 +1,23 @@
 import { el } from 'redom';
-// import Section from '../comps/Section';
+import { createMusicNoteIconEl } from '../../services/createIconEl';
 import Header from '../comps/Header';
+import Tracks from '../views/Tracks';
+import Side from '../comps/Side';
 
 export default class MainPage {
     private mainPage: HTMLElement;
     private header: Header;
-    // private section: Section;
+    private tracks: Tracks;
+    private side: Side;
 
     constructor() {
         this.header = new Header();
-        // this.section = new Section('tracks');
-        this.mainPage = el('.app', this.header.render());
+        this.side = new Side();
+        this.side.addItem(false, '/', createMusicNoteIconEl(), 'Избранное');
+        this.side.addItem(true, '/', createMusicNoteIconEl(), 'Аудиокомпозиции');
+        this.tracks = new Tracks(false);
+        const mainEl = el('main', this.tracks.render());
+        this.mainPage = el('.app', this.header.render(), this.side.render(), mainEl);
     }
 
     render(): HTMLElement {

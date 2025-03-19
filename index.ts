@@ -19,15 +19,16 @@ const renderPage = (route: string) => {
 
 window.addEventListener('load', () => {
     const path = window.location.pathname;
+    console.log(path);
     renderPage(path);
 });
 
-// document.addEventListener('click', (event) => {
-//     const target = event.target as HTMLElement;
-//     if (target.tagName === 'A' && target.getAttribute('href')) {
-//         event.preventDefault();
-//         const path = target.getAttribute('href')!;
-//         window.history.pushState({}, '', path);
-//         renderPage(path);
-//     }
-// });
+document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'A' && target.getAttribute('href')) {
+        event.preventDefault();
+        const path = target.getAttribute('href')!;
+        window.history.pushState({}, '', path);
+        renderPage(path);
+    }
+});

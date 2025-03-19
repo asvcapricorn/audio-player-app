@@ -1,12 +1,9 @@
 import { el, svg } from 'redom';
-import Container from './Container';
 import Search from './SearchForm';
 import ProfileLink from './ProfileLink';
 
 export default class Header {
     private header: HTMLElement;
-    private container: Container;
-    private inner: HTMLElement;
     private wrapper: HTMLElement;
     private linkWrapper: HTMLElement;
     private link: HTMLAnchorElement;
@@ -36,9 +33,7 @@ export default class Header {
         this.search = new Search();
         this.profile = new ProfileLink('/src/images/profile.jpg', 'username');
         this.wrapper = el('.header__wrapper', this.search.render(), this.profile.render());
-        this.inner = el('.header__inner', this.linkWrapper, this.wrapper);
-        this.container = new Container(this.inner);
-        this.header = el('header.header', this.container.render());
+        this.header = el('header.header', this.linkWrapper, this.wrapper);
     }
 
     render(): HTMLElement {
