@@ -2,8 +2,8 @@ import './src/styles/style.scss';
 import { el, mount } from 'redom';
 import routes from './src/controller/Routes';
 
-// const appEl = document.querySelector('.app');
 const bodyEl = document.querySelector('body');
+
 
 const renderPage = (route: string) => {
     if (bodyEl) {
@@ -19,7 +19,6 @@ const renderPage = (route: string) => {
 
 window.addEventListener('load', () => {
     const path = window.location.pathname;
-    console.log(path);
     renderPage(path);
 });
 
