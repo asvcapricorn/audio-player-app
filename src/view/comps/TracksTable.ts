@@ -1,14 +1,15 @@
 import { el, svg } from 'redom';
-import requests from '../../model/requestsClass';
+import Track from './Track';
 
 export default class TracksTable {
-    private tracksTable: HTMLTableElement;
+    private tracksTable: HTMLElement;
+    private tableListEl: HTMLElement;
 
     constructor() {
-        const trEl = el('tr.tracks-table__tr');
-        const tableThList = ['№',
-            'Название',
-            'АЛЬБОМ',
+        const tableHeadEl = el('.tracks-table__head',
+            el('span.tracks-table__head-text', '№'),
+            el('span.tracks-table__head-text', 'Название'),
+            el('span.tracks-table__head-text', 'АЛЬБОМ'),
             svg('svg.tracks-table__icon', {
                 'aria-hidden': true,
                 width: '16',
@@ -42,7 +43,7 @@ export default class TracksTable {
                     'stroke-linejoin': 'round',
                 })
             ]),
-            '',
+            el('span.tracks-table__head-text', ''),
             svg('svg.tracks-table__icon', {
                 'aria-hidden': true,
                 width: '16',
@@ -63,38 +64,19 @@ export default class TracksTable {
                     'stroke-linejoin': 'round',
                 })
             ]),
-            ''
-        ];
-        for (const th of tableThList) {
-            const thEl = el('th.tracks-table', th);
-            trEl.appendChild(thEl);
-        };
-        const theadEl = el('thead.tracks-table__thead', trEl);
-        const tbodyEl = el('tbody.tracks-table__tbody',);
-        requests.getTracks(window.localStorage.getItem('token'))
-            .then(data => {
-                console.log(data);
-                for (const track of data) {
-                    const row = el('tr.tracks-table__tr');
-                    row.innerHTML = `
-                        <td>${track.id}</td>
-                        <td>${track.title}</td>
-                        <td>-</td>
-                        <td>Сегодня</td>
-                        <td><3</td>
-                        <td>${track.duration}</td>
-                        <td>...</td>
-                     `;
-                    tbodyEl.appendChild(row);
+            el('span.tracks-table__head-text', '')
+        );
 
-                }
-            })
-            .catch(error => console.error(error));
-
-        this.tracksTable = el('table.tracks-table', theadEl, tbodyEl) as HTMLTableElement;
+        this.tableListEl = el('ul.tracks-table__list');
+        this.tracksTable = el('.tracks-table', tableHeadEl, this.tableListEl);
     };
 
-    render(): HTMLTableElement {
+    addTrack(track: Track) {
+        const tableListItemEl = el('li.tracks-table__item', track.render());
+        this.tableListEl.appendChild(tableListItemEl);
+    }
+
+    render(): HTMLElement {
         return this.tracksTable;
     }
 }
