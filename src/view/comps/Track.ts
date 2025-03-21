@@ -8,11 +8,11 @@ export default class Track {
         const imgEl = el('img.track__img', { src: img ? img : 'src/images/track-img.png', alt: 'Изображение аудиофайла' });
         const titleEl = el('span.track__title', title);
         const artistEl = el('span.track__artist', artist);
-        const textWrapper = el('.track__textWrapper', titleEl, artistEl);
+        const textWrapper = el('.track__text-wrapper', titleEl, artistEl);
         const titleWrapperEl = el('.track__title-wrapper', imgEl, textWrapper);
         const albumEl = el('.span.track__album', album ? album : '-');
         const dateEl = el('.span.track__date', date ? date : '-');
-        const favBtnEl = el('button', svg('svg.track__icon', {
+        const favBtnEl = el('button.track__fav-btn', svg('svg.track__fav-icon', {
             'aria-hidden': true,
             width: '24',
             height: '24',
@@ -26,7 +26,7 @@ export default class Track {
             })
         ]));
         const durationEl = el('span.track__duration', duration);
-        const optionsBtnEl = el('button.track__options-btn', svg('svg.track__icon', {
+        const optionsBtnEl = el('button.track__options-btn', svg('svg.track__options-icon', {
             'aria-hidden': true,
             width: '23',
             height: '4',

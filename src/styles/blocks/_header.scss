@@ -1,3 +1,5 @@
+@use "../global/variables";
+
 .header {
     padding: 15px 30px 0;
     display: grid;
@@ -8,6 +10,7 @@
     top: 0;
     z-index: 10;
     width: 100%;
+    background-color: variables.$color-white;
 
     &__wrapper {
         display: grid;

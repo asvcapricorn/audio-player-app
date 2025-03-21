@@ -1,0 +1,37 @@
+@use "../global/variables";
+
+.tracks-table {
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid variables.$color-whisper;
+        padding: 10px 8px;
+    }
+
+    &__head-text {
+        font-size: 12px;
+        line-height: 12px;
+        letter-spacing: 1.08px;
+        text-transform: uppercase;
+        color: variables.$color-dark-gray;
+    }
+
+    &__icon {
+        width: 16px;
+        height: 16px;
+        color: variables.$color-dark-gray;
+    }
+
+    &__list {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__item {
+        border-bottom: 1px solid variables.$color-whisper;
+    }
+}
