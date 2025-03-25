@@ -6,11 +6,11 @@ export default class Track {
     private img: string | null;
     private title: string;
     private artist: string;
-    private duration: string;
+    private duration: number;
     private playerContainer: HTMLElement | null = null;
     private currentPlayer: PlayerBar | null = null;
 
-    constructor(id: number, title: string, artist: string, duration: string, date?: string, album?: string, img?: string) {
+    constructor(id: number, title: string, artist: string, duration: number, date?: string, album?: string, img?: string) {
         const idEl = el('span.track__id', id);
 
         const imgEl = el('img.track__img', { src: img ? img : 'src/images/track-img.png', alt: 'Изображение аудиофайла' });
@@ -129,10 +129,49 @@ export default class Track {
         this.currentPlayer = new PlayerBar(this.title, this.artist, this.img, this.duration);
         container.appendChild(this.currentPlayer.render());
 
-        console.log('play');
+        this.startProgress(this.duration);
+    }
+
+    startProgress(time: number) {
+        const progressBarEl = document.querySelector('.player-bar__progress-bar') as HTMLElement;
+        if (!progressBarEl) {
+            return;
+        }
+
+        progressBarEl.style.transition = 'none';
+        progressBarEl.style.transform = 'translateY(-50%) scaleX(0)';
+
+        void progressBarEl.offsetWidth;
+
+        progressBarEl.style.transition = `transform ${convertToSeconds(String(time))}s linear`;
+        progressBarEl.style.transform = 'translateY(-50%) scaleX(1)';
+
+        const timecodeEl = document.querySelector('.player-bar__timecode--current');
+        if (timecodeEl) {
+            let currentTime = 0;
+            timecodeEl.textContent = `${formatSeconds(currentTime)}`;
+            const intervalId = setInterval(() => {
+                currentTime++;
+                timecodeEl.textContent = `${formatSeconds(currentTime)}`;
+                if (currentTime === time) {
+                    clearInterval(intervalId);
+                }
+            }, 1000)
+        }
     }
 
     render(): HTMLElement {
         return this.track;
     }
+}
+
+function convertToSeconds(timeString: string) {
+    const [minutes, seconds] = timeString.split('.').map(Number);
+    return minutes * 60 + seconds;
+}
+
+function formatSeconds(seconds: number) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}.${secs.toString().padStart(2, '0')}`;
 }

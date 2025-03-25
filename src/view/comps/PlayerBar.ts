@@ -3,7 +3,7 @@ import { el, svg } from 'redom';
 export default class PlayerBar {
     private playerBar: HTMLElement;
 
-    constructor(title: string, artist: string, img: string | null, duration: string) {
+    constructor(title: string, artist: string, img: string | null, duration: number) {
         const imgEl = el('img.player-bar__img', { src: img, alt: 'Изображение аудиофайла' });
         const titleEl = el('a.player-bar__title', title, { href: '#' });
         const favBtnEl = el('button.player-bar__fav-btn.btn-icon', svg('svg.player-bar__fav-icon', {
@@ -103,10 +103,11 @@ export default class PlayerBar {
             })
         ]), { type: 'button' });
         const centerTopEl = el('.player-bar__center-top', shuffleBtnEl, skipBackBtnEl, playBtnEl, skipForwardBtnEl, repeatBtnEl);
-        const timecodeEl = el('span.player-bar__timecode', '0:00');
+        const currentTimecodeEl = el('span.player-bar__timecode.player-bar__timecode--current', '0:00');
         const progressBar = el('.player-bar__progress-bar');
+        const progressBarWrapper = el('.player-bar__progress-bar-wrapper', progressBar);
         const totalTimecode = el('span.player-bar__timecode.player-bar__timecode--total', duration);
-        const centerBottomEl = el('.player-bar__center-bottom', timecodeEl, progressBar, totalTimecode);
+        const centerBottomEl = el('.player-bar__center-bottom', currentTimecodeEl, progressBarWrapper, totalTimecode);
         const centerEl = el('.player-bar__center', centerTopEl, centerBottomEl);
         const volumeBtnEl = el('button.player-bar__volume-btn.btn-icon', svg('svg.player-bar__icon', {
             'aria-hidden': true,
