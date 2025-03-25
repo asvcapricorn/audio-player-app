@@ -33,12 +33,6 @@
 
     &__play-btn {
         position: relative;
-        border: none;
-        background-color: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
         flex-shrink: 0;
     }
 
@@ -155,13 +149,7 @@
     }
 
     &__fav-btn {
-        cursor: pointer;
-        border: none;
         padding: 0 8px 0 0;
-        background-color: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
 
         &:hover {
             #{$root}__fav-icon {
@@ -185,13 +173,6 @@
     }
 
     &__options-btn {
-        cursor: pointer;
-        border: none;
-        padding: 0;
-        background-color: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         position: relative;
 
         &:hover {

@@ -10,6 +10,7 @@
 
 /* Blocks */
 /* ------------------------------------ */
+@use "blocks/_btn-icon";
 @use "blocks/_search-custom-input";
 @use "blocks/_profile-link";
 @use "blocks/_tracks";
@@ -17,6 +18,6 @@
 @use "blocks/_track";
 @use "blocks/_header";
 @use "blocks/_side";
-// @use "blocks/_footer";
+@use "blocks/_player-bar";
 // @use "blocks/_custom-input";
 // @use "blocks/_socials";

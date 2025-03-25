@@ -1,12 +1,22 @@
 import { el, svg } from 'redom';
+import PlayerBar from './PlayerBar';
 
 export default class Track {
     private track: HTMLElement;
+    private img: string | null;
+    private title: string;
+    private artist: string;
+    private duration: string;
+    private playerContainer: HTMLElement | null = null;
+    private currentPlayer: PlayerBar | null = null;
 
     constructor(id: number, title: string, artist: string, duration: string, date?: string, album?: string, img?: string) {
         const idEl = el('span.track__id', id);
+
         const imgEl = el('img.track__img', { src: img ? img : 'src/images/track-img.png', alt: 'Изображение аудиофайла' });
-        const playIconEl = svg('svg.track__play-icon', {
+        this.img = imgEl.getAttribute('src');
+
+        const playBtnEl = el('button.track__play-btn.btn-icon', imgEl, svg('svg.track__play-icon', {
             'aria-hidden': true,
             width: '40',
             height: '40',
@@ -23,10 +33,17 @@ export default class Track {
                 d: 'M27.0385 21.4138C26.9679 21.4862 26.7012 21.7962 26.4528 22.0512C24.9963 23.655 21.197 26.28 19.2085 27.0813C18.9065 27.21 18.143 27.4825 17.735 27.5C17.3441 27.5 16.9715 27.41 16.6159 27.2275C16.1727 26.9725 15.8171 26.5713 15.6223 26.0975C15.4968 25.7688 15.302 24.785 15.302 24.7675C15.1072 23.6913 15 21.9425 15 20.01C15 18.1688 15.1072 16.4913 15.2667 15.3988C15.2849 15.3812 15.4798 14.1588 15.6929 13.74C16.0838 12.975 16.8473 12.5 17.6644 12.5H17.735C18.2672 12.5187 19.3863 12.9938 19.3863 13.0113C21.2677 13.8138 24.9793 16.31 26.471 17.9688C26.471 17.9688 26.8911 18.395 27.0738 18.6613C27.3587 19.0437 27.5 19.5175 27.5 19.9913C27.5 20.52 27.3405 21.0125 27.0385 21.4138Z',
                 fill: 'currentColor'
             })
-        ]);
-        const playBtnEl = el('button.track__play-btn', imgEl, playIconEl, { type: 'button' });
-        const titleEl = el('a.track__title', title, { href: '#' });
-        const artistEl = el('a.track__artist', artist, { href: '#' });
+        ]), { type: 'button' });
+        playBtnEl.addEventListener('click', () => {
+            this.playTrack();
+        });
+
+        this.title = title;
+        const titleEl = el('a.track__title', this.title, { href: '#' });
+
+        this.artist = artist;
+        const artistEl = el('a.track__artist', this.artist, { href: '#' });
+
         const textWrapper = el('.track__text-wrapper', titleEl, artistEl);
         const titleWrapperEl = el('.track__title-wrapper', playBtnEl, textWrapper);
         let albumEl: HTMLElement;
@@ -36,7 +53,7 @@ export default class Track {
             albumEl = el('span.track__album', '-');
         }
         const dateEl = el('.span.track__date', date ? date : '-');
-        const favBtnEl = el('button.track__fav-btn', svg('svg.track__fav-icon', {
+        const favBtnEl = el('button.track__fav-btn.btn-icon', svg('svg.track__fav-icon', {
             'aria-hidden': true,
             width: '24',
             height: '24',
@@ -49,8 +66,11 @@ export default class Track {
                 fill: 'currentColor'
             })
         ]));
-        const durationEl = el('span.track__duration', duration);
-        const optionsBtnEl = el('button.track__options-btn', svg('svg.track__options-icon', {
+
+        this.duration = duration;
+        const durationEl = el('span.track__duration', this.duration);
+
+        const optionsBtnEl = el('button.track__options-btn.btn-icon', svg('svg.track__options-icon', {
             'aria-hidden': true,
             width: '23',
             height: '4',
@@ -78,7 +98,39 @@ export default class Track {
             })
         ]));
         this.track = el('.track', idEl, titleWrapperEl, albumEl, dateEl, favBtnEl, durationEl, optionsBtnEl);
+
     };
+
+    private ensurePlayerContainer(): HTMLElement {
+        if (this.playerContainer) {
+            return this.playerContainer;
+        }
+
+        const existingContainer = document.querySelector('.player-bar-container');
+        if (existingContainer instanceof HTMLElement) {
+            this.playerContainer = existingContainer;
+            return this.playerContainer;
+        }
+
+        const newContainer = el('.player-bar-container');
+        this.playerContainer = newContainer;
+
+        const mainEl = document.querySelector('main');
+        mainEl!.appendChild(newContainer);
+
+        return this.playerContainer;
+    }
+
+    playTrack(): void {
+        const container = this.ensurePlayerContainer();
+
+        container.innerHTML = '';
+
+        this.currentPlayer = new PlayerBar(this.title, this.artist, this.img, this.duration);
+        container.appendChild(this.currentPlayer.render());
+
+        console.log('play');
+    }
 
     render(): HTMLElement {
         return this.track;
