@@ -2,11 +2,12 @@
 
 .tracks-table {
     &__head {
-        display: flex;
+        display: grid;
         align-items: center;
-        justify-content: space-between;
         border-bottom: 1px solid variables.$color-whisper;
         padding: 10px 8px;
+        grid-template-columns: 30px minmax(200px, 1fr) minmax(75px, 254px) minmax(60px, 187px) 36px 48px 25px;
+        gap: 8px;
     }
 
     &__head-text {

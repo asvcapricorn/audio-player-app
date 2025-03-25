@@ -1,10 +1,22 @@
 @use '../global/variables';
 
 .track {
-    padding: 14px 10px;
-    display: flex;
+    $root: &;
+    padding: 13px 10px;
+    display: grid;
     align-items: center;
-    justify-content: space-between;
+    grid-template-columns: 30px minmax(200px, 1fr) minmax(75px, 254px) minmax(60px, 187px) 36px 48px 25px;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color variables.$transition-200-ease-in;
+
+    &:hover {
+        background-color: variables.$color-white-smoke;
+
+        #{$root}__play-icon {
+            opacity: 1;
+        }
+    }
 
     &__id {
         font-size: 20px;
@@ -13,10 +25,21 @@
     }
 
     &__title-wrapper {
-        padding: 0 8px;
         display: flex;
         gap: 10px;
         align-items: center;
+        position: relative;
+    }
+
+    &__play-btn {
+        position: relative;
+        border: none;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
     }
 
     &__img {
@@ -24,16 +47,51 @@
         height: 60px;
     }
 
+    &__play-icon {
+        opacity: 0;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: variables.$color-burnt-orange;
+        transition: opacity variables.$transition-200-ease-in;
+    }
+
+    &__play-icon-el {
+        color: variables.$color-white;
+    }
+
     &__text-wrapper {
         display: flex;
         flex-direction: column;
         gap: 10px;
+        min-width: 0;
     }
 
     &__title {
         font-size: 14px;
         line-height: 12px;
         letter-spacing: 0.14px;
+        position: relative;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover::before {
+            width: 100%;
+        }
+
+        &::before {
+            content: '';
+            height: 1px;
+            background-color: variables.$color-nero;
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 0;
+            transition: width variables.$transition-300-ease-in;
+        }
     }
 
     &__artist {
@@ -41,12 +99,52 @@
         line-height: 12px;
         letter-spacing: 0.12px;
         color: variables.$color-dark-gray-2;
+        position: relative;
+        width: fit-content;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+
+        &:hover::before {
+            width: 100%;
+        }
+
+        &::before {
+            content: '';
+            height: 1px;
+            background-color: variables.$color-dark-gray-2;
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 0;
+            transition: width variables.$transition-300-ease-in;
+        }
     }
 
     &__album {
         font-size: 14px;
         line-height: 12px;
         letter-spacing: 0.14px;
+        position: relative;
+    }
+
+    a#{$root}__album {
+        &:hover::before {
+            width: 100%;
+        }
+
+        &::before {
+            content: '';
+            height: 1px;
+            background-color: variables.$color-nero;
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 0;
+            transition: width variables.$transition-300-ease-in;
+        }
     }
 
     &__date {
@@ -59,14 +157,64 @@
     &__fav-btn {
         cursor: pointer;
         border: none;
+        padding: 0 8px 0 0;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            #{$root}__fav-icon {
+                opacity: 0.7;
+            }
+        }
+    }
+
+    &__fav-icon {
+        color: variables.$color-burnt-orange;
+        width: 24px;
+        height: 24px;
+        transition: opacity variables.$transition-300-ease-in;
+    }
+
+    &__duration {
+        font-size: 14px;
+        line-height: 12px;
+        letter-spacing: 0.14px;
+        color: variables.$color-dark-gray-2;
+    }
+
+    &__options-btn {
+        cursor: pointer;
+        border: none;
         padding: 0;
         background-color: transparent;
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+
+        &:hover {
+            #{$root}__options-icon {
+                color: variables.$color-nero;
+            }
+        }
+
+        &::before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
     }
 
-    &__fav-icon {
-        color: variables.$color-burnt-orange;
+    &__options-icon {
+        color: variables.$color-light-gray;
+        width: 23px;
+        height: 4px;
+        transition: color variables.$transition-300-ease-in;
     }
 }

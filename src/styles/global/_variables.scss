@@ -7,9 +7,11 @@ $ff-main: "Manrope", "Arial", sans-serif;
 $color-white: #FFFFFF;
 $color-white-smoke: #F5F5F5;
 $color-whisper: #E8E8E8;
+$color-whisper-2: #E6E6E6;
 $color-nero: #171717;
 $color-tangaroa: #11253D;
 $color-grey: #888888;
+$color-light-gray: #C4C4C4;
 $color-dark-gray: #A4A4A4;
 $color-dark-gray-2: #AAAAAA;
 $color-burnt-orange: #FC6D3E;
@@ -23,4 +25,5 @@ $color-burnt-orange: #FC6D3E;
 
 /* Animations */
 $transition-ease-in: ease-in;
+$transition-200-ease-in: 0.2s $transition-ease-in;
 $transition-300-ease-in: 0.3s $transition-ease-in;
