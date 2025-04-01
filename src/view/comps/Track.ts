@@ -1,22 +1,30 @@
 import { el, svg } from 'redom';
+import TrackManager from './TrackManager';
 import PlayerBar from './PlayerBar';
 
 export default class Track {
     private track: HTMLElement;
+    private id: number;
     private img: string | null;
     private title: string;
     private artist: string;
     private duration: number;
     private playerContainer: HTMLElement | null = null;
     private currentPlayer: PlayerBar | null = null;
+    private playBtnEl: HTMLElement;
+    private audio: HTMLAudioElement | null = null;
+    private isPlaying: boolean = false;
 
     constructor(id: number, title: string, artist: string, duration: number, date?: string, album?: string, img?: string) {
-        const idEl = el('span.track__id', id);
+        TrackManager.register(this);
+
+        this.id = id;
+        const idEl = el('span.track__id', this.id);
 
         const imgEl = el('img.track__img', { src: img ? img : 'src/images/track-img.png', alt: 'Изображение аудиофайла' });
         this.img = imgEl.getAttribute('src');
 
-        const playBtnEl = el('button.track__play-btn.btn-icon', imgEl, svg('svg.track__play-icon', {
+        const playBtnEl = el('button.track__play-btn.btn-icon', imgEl, svg('svg.track__play-icon.', {
             'aria-hidden': true,
             width: '40',
             height: '40',
@@ -33,9 +41,34 @@ export default class Track {
                 d: 'M27.0385 21.4138C26.9679 21.4862 26.7012 21.7962 26.4528 22.0512C24.9963 23.655 21.197 26.28 19.2085 27.0813C18.9065 27.21 18.143 27.4825 17.735 27.5C17.3441 27.5 16.9715 27.41 16.6159 27.2275C16.1727 26.9725 15.8171 26.5713 15.6223 26.0975C15.4968 25.7688 15.302 24.785 15.302 24.7675C15.1072 23.6913 15 21.9425 15 20.01C15 18.1688 15.1072 16.4913 15.2667 15.3988C15.2849 15.3812 15.4798 14.1588 15.6929 13.74C16.0838 12.975 16.8473 12.5 17.6644 12.5H17.735C18.2672 12.5187 19.3863 12.9938 19.3863 13.0113C21.2677 13.8138 24.9793 16.31 26.471 17.9688C26.471 17.9688 26.8911 18.395 27.0738 18.6613C27.3587 19.0437 27.5 19.5175 27.5 19.9913C27.5 20.52 27.3405 21.0125 27.0385 21.4138Z',
                 fill: 'currentColor'
             })
-        ]), { type: 'button' });
+        ]),
+            svg('svg.track__pause-icon', {
+                'aria-hidden': true,
+                width: '40',
+                height: '40',
+                viewBox: '0 0 40 40',
+                fill: 'white',
+                xmlns: 'http://www.w3.org/2000/svg',
+            }, svg('svg.track__pause-icon-el.track__icon-hidden', [
+                svg('rect', {
+                    x: '10',
+                    y: '10',
+                    width: '5',
+                    height: '20',
+                    rx: '2'
+                }),
+                svg('rect', {
+                    x: '25',
+                    y: '10',
+                    width: '5',
+                    height: '20',
+                    rx: '2'
+                })]
+            )),
+            { type: 'button' });
+        this.playBtnEl = playBtnEl;
         playBtnEl.addEventListener('click', () => {
-            this.playTrack();
+            this.play();
         });
 
         this.title = title;
@@ -121,7 +154,7 @@ export default class Track {
         return this.playerContainer;
     }
 
-    playTrack(): void {
+    private play(): void {
         const container = this.ensurePlayerContainer();
 
         container.innerHTML = '';
@@ -129,49 +162,81 @@ export default class Track {
         this.currentPlayer = new PlayerBar(this.title, this.artist, this.img, this.duration);
         container.appendChild(this.currentPlayer.render());
 
-        this.startProgress(this.duration);
-    }
+        TrackManager.stopAll(this);
 
-    startProgress(time: number) {
-        const progressBarEl = document.querySelector('.player-bar__progress-bar') as HTMLElement;
-        if (!progressBarEl) {
-            return;
+        if (!this.audio) {
+            this.audio = new Audio(`http://localhost:8000/audio/1.mp3`);
+            this.track.append(this.audio);
+            this.audio.addEventListener('ended', () => {
+                this.isPlaying = false;
+                this.updatePlayButton();
+            });
         }
 
-        progressBarEl.style.transition = 'none';
-        progressBarEl.style.transform = 'translateY(-50%) scaleX(0)';
+        if (this.isPlaying) {
+            this.audio.pause();
+        } else {
+            this.audio.play();
+        }
 
-        void progressBarEl.offsetWidth;
+        this.isPlaying = !this.isPlaying;
+        this.updatePlayButton();
+    }
 
-        progressBarEl.style.transition = `transform ${convertToSeconds(String(time))}s linear`;
-        progressBarEl.style.transform = 'translateY(-50%) scaleX(1)';
+    public stop() {
+        if (this.audio) {
+            this.audio.pause();
+            this.audio.currentTime = 0;
+        }
+        this.isPlaying = false;
+        this.updatePlayButton();
+    }
 
-        const timecodeEl = document.querySelector('.player-bar__timecode--current');
-        if (timecodeEl) {
-            let currentTime = 0;
-            timecodeEl.textContent = `${formatSeconds(currentTime)}`;
-            const intervalId = setInterval(() => {
-                currentTime++;
-                timecodeEl.textContent = `${formatSeconds(currentTime)}`;
-                if (currentTime === time) {
-                    clearInterval(intervalId);
-                }
-            }, 1000)
+    // private startProgress(time: number) {
+    //     if (!this.audio) return;
+
+    //     const progressBarEl = document.querySelector('.player-bar__progress-bar') as HTMLElement;
+    //     if (!progressBarEl) return;
+
+    //     // Сброс анимации
+    //     progressBarEl.style.transition = 'none';
+    //     progressBarEl.style.width = '0';
+
+    //     // Запуск анимации
+    //     setTimeout(() => {
+    //         progressBarEl.style.transition = `width ${time}s linear`;
+    //         progressBarEl.style.width = '100%';
+    //     }, 10);
+
+    //     // Обновление времени
+    //     const timecodeEl = document.querySelector('.player-bar__timecode--current');
+    //     if (timecodeEl) {
+    //         this.audio.addEventListener('timeupdate', () => {
+    //             timecodeEl.textContent = this.formatTime(this.audio!.currentTime);
+    //         });
+    //     }
+    // }
+
+    // private formatTime(seconds: number): string {
+    //     const mins = Math.floor(seconds / 60);
+    //     const secs = Math.floor(seconds % 60);
+    //     return `${mins}:${secs.toString().padStart(2, '0')}`;
+    // }
+
+    private updatePlayButton(): void {
+        const playIconEl = this.playBtnEl.querySelector('.track__play-icon-el');
+        const pauseIconEl = this.playBtnEl.querySelector('.track__pause-icon-el');
+
+        if (this.isPlaying) {
+            playIconEl?.classList.add('track__icon-hidden');
+            pauseIconEl?.classList.remove('track__icon-hidden');
+        } else {
+            playIconEl?.classList.remove('track__icon-hidden');
+            pauseIconEl?.classList.add('track__icon-hidden');
         }
     }
 
     render(): HTMLElement {
         return this.track;
     }
-}
-
-function convertToSeconds(timeString: string) {
-    const [minutes, seconds] = timeString.split('.').map(Number);
-    return minutes * 60 + seconds;
-}
-
-function formatSeconds(seconds: number) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}.${secs.toString().padStart(2, '0')}`;
 }

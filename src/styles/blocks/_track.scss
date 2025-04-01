@@ -13,7 +13,8 @@
     &:hover {
         background-color: variables.$color-white-smoke;
 
-        #{$root}__play-icon {
+        #{$root}__play-icon,
+        #{$root}__pause-icon {
             opacity: 1;
         }
     }
@@ -51,8 +52,22 @@
         transition: opacity variables.$transition-200-ease-in;
     }
 
+    &__pause-icon {
+        opacity: 0;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: variables.$color-burnt-orange;
+        transition: opacity variables.$transition-200-ease-in;
+    }
+
     &__play-icon-el {
         color: variables.$color-white;
+    }
+
+    &__icon-hidden {
+        display: none;
     }
 
     &__text-wrapper {
