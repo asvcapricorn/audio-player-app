@@ -2,14 +2,7 @@ const { tracks } = require("../data/tracks");
 const User = require("../models/User");
 
 const getTracks = (req, res) => {
-  res.json(tracks.map(track => ({
-    id: track.id,
-    title: track.title,
-    artist: track.artist,
-    duration: track.duration,
-    url: `/audio/1.mp3`
-  })
-  ))
+  res.json(tracks);
 };
 
 const addToFavorites = (req, res) => {

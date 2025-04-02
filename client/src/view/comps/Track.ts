@@ -4,19 +4,22 @@ import PlayerBar from './PlayerBar';
 
 export default class Track {
     private track: HTMLElement;
+    private file: string;
     private id: number;
     private img: string | null;
     private title: string;
     private artist: string;
-    private duration: number;
+    public duration: number;
     private playerContainer: HTMLElement | null = null;
     private currentPlayer: PlayerBar | null = null;
     private playBtnEl: HTMLElement;
-    private audio: HTMLAudioElement | null = null;
-    private isPlaying: boolean = false;
+    public audio: HTMLAudioElement | null = null;
+    public isPlaying: boolean = false;
 
-    constructor(id: number, title: string, artist: string, duration: number, date?: string, album?: string, img?: string) {
+    constructor(file: string, id: number, title: string, artist: string, duration: number, album: string, date?: string, img?: string) {
         TrackManager.register(this);
+
+        this.file = file;
 
         this.id = id;
         const idEl = el('span.track__id', this.id);
@@ -79,12 +82,7 @@ export default class Track {
 
         const textWrapper = el('.track__text-wrapper', titleEl, artistEl);
         const titleWrapperEl = el('.track__title-wrapper', playBtnEl, textWrapper);
-        let albumEl: HTMLElement;
-        if (album) {
-            albumEl = el('a.track__album', album, { href: '#' });
-        } else {
-            albumEl = el('span.track__album', '-');
-        }
+        const albumEl: HTMLSpanElement = el('span.track__album', album);
         const dateEl = el('.span.track__date', date ? date : '-');
         const favBtnEl = el('button.track__fav-btn.btn-icon', svg('svg.track__fav-icon', {
             'aria-hidden': true,
@@ -154,18 +152,19 @@ export default class Track {
         return this.playerContainer;
     }
 
-    private play(): void {
+    public play(): void {
         const container = this.ensurePlayerContainer();
 
         container.innerHTML = '';
 
         this.currentPlayer = new PlayerBar(this.title, this.artist, this.img, this.duration);
+        this.currentPlayer.setTrack(this);
         container.appendChild(this.currentPlayer.render());
 
         TrackManager.stopAll(this);
 
         if (!this.audio) {
-            this.audio = new Audio(`http://localhost:8000/audio/1.mp3`);
+            this.audio = new Audio(`http://localhost:8000/audio/${this.file}`);
             this.track.append(this.audio);
             this.audio.addEventListener('ended', () => {
                 this.isPlaying = false;
@@ -183,6 +182,13 @@ export default class Track {
         this.updatePlayButton();
     }
 
+    // private updatePlayState() {
+    //     this.updatePlayButton();
+    //     if (this.currentPlayer) {
+    //         this.currentPlayer.updatePlayButton();
+    //     }
+    // }
+
     public stop() {
         if (this.audio) {
             this.audio.pause();
@@ -191,37 +197,6 @@ export default class Track {
         this.isPlaying = false;
         this.updatePlayButton();
     }
-
-    // private startProgress(time: number) {
-    //     if (!this.audio) return;
-
-    //     const progressBarEl = document.querySelector('.player-bar__progress-bar') as HTMLElement;
-    //     if (!progressBarEl) return;
-
-    //     // Сброс анимации
-    //     progressBarEl.style.transition = 'none';
-    //     progressBarEl.style.width = '0';
-
-    //     // Запуск анимации
-    //     setTimeout(() => {
-    //         progressBarEl.style.transition = `width ${time}s linear`;
-    //         progressBarEl.style.width = '100%';
-    //     }, 10);
-
-    //     // Обновление времени
-    //     const timecodeEl = document.querySelector('.player-bar__timecode--current');
-    //     if (timecodeEl) {
-    //         this.audio.addEventListener('timeupdate', () => {
-    //             timecodeEl.textContent = this.formatTime(this.audio!.currentTime);
-    //         });
-    //     }
-    // }
-
-    // private formatTime(seconds: number): string {
-    //     const mins = Math.floor(seconds / 60);
-    //     const secs = Math.floor(seconds % 60);
-    //     return `${mins}:${secs.toString().padStart(2, '0')}`;
-    // }
 
     private updatePlayButton(): void {
         const playIconEl = this.playBtnEl.querySelector('.track__play-icon-el');

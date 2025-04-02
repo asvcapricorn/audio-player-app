@@ -10,5 +10,9 @@
     },
     "devDependencies": {
         "concurrently": "^8.2.2"
+    },
+    "dependencies": {
+        "music-metadata": "^11.0.3",
+        "node-id3": "^0.2.8"
     }
 }

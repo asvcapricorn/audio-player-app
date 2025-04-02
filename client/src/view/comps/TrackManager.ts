@@ -1,15 +1,31 @@
 import Track from './Track';
 
 export default class TrackManager {
-    private static instances: Track[] = [];
+    private static tracks: Track[] = [];
+    private static currentTrackIndex: number = -1;
 
     static register(track: Track) {
-        this.instances.push(track);
+        this.tracks.push(track);
     }
 
-    static stopAll(currentTrack?: Track) {
-        this.instances.forEach(track => {
-            if (track !== currentTrack) {
+    static playTrack(index: number) {
+        if (index >= 0 && index < this.tracks.length) {
+            this.currentTrackIndex = index;
+            this.tracks[index].play();
+        }
+    }
+
+    static nextTrack() {
+        this.playTrack(this.currentTrackIndex + 1);
+    }
+
+    static prevTrack() {
+        this.playTrack(this.currentTrackIndex - 1);
+    }
+
+    static stopAll(exceptTrack?: Track) {
+        this.tracks.forEach(track => {
+            if (track !== exceptTrack) {
                 track.stop();
             }
         });

@@ -16,7 +16,7 @@ export default class Tracks {
             .then(data => {
                 console.log(data);
                 for (const track of data) {
-                    this.table.addTrack(new Track(track.id, track.title, track.artist, track.duration));
+                    this.table.addTrack(new Track(track.file, track.id, track.title, track.artist, track.duration, track.album));
                 }
             })
             .catch(error => console.error(error));
